@@ -1,0 +1,24 @@
+<view class="bigest">
+  <view class="toux">
+    <image src='{{Head_picture}}' class="c_tx"></image>
+    <text class="username" >{{Username}}</text>
+    <text class='time'>{{Time}}</text>
+    <image src='/images/bg2.png' class='c_1'></image>
+  </view>
+
+  <view class='sc' >
+    <view class='sctp'>
+    <image style="width: 32px; height: 32px;" src='../../images/up_pic1.png' mode='aspectFit' bindtap='doupLoad'></image>
+    </view>
+    <view class='sctp_tx'><text>查看相册</text></view>
+    
+    <view class='gogo'>
+    <image style="width: 35px; height: 35px;" src='../../images/kj.png'mode='aspectFit' bindtap='toPublic_place'></image>
+    </view> 
+    <view class='go_tx'><text>分享大厅</text></view>
+    
+  </view>
+  <view class='tp' >
+    <image src='/images/bg.png' class='c_3' ></image>
+  </view>
+</view>

@@ -1,0 +1,18 @@
+<view class="container">
+  <view class="banner">
+    <view>
+      <text>每一张图片都值得认真对待</text>
+      <text>欢迎使用流脉云相册，进行图片云端分类管理</text>
+    </view>
+  </view>
+  <view class="block">
+    <view bindtap="addCategory">
+      <image mode="aspectFit" src="cloud://cloudalbum-0g7a32ke424ee80f.636c-cloudalbum-0g7a32ke424ee80f-1305212202/cloud_icons/添 加.png"></image>
+      <text>添加相册</text>
+    </view>
+    <view bindtap="goToCategory" wx:for="{{typeList}}" wx:key="index" data-type="家庭相册">
+      <image mode="aspectFit" src="{{typeList[index].icon}}"></image>
+      <text>{{typeList[index].name}}</text>
+    </view>
+  </view>
+</view>

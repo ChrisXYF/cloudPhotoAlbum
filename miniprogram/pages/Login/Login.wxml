@@ -1,0 +1,8 @@
+<view class='con'>
+<text class='mtext'>使用微信账号登陆流脉云相册</text>
+</view>
+
+<view class='con'>
+<button open-type="getUserInfo" class='ubutton' bindgetuserinfo="onGetOpenid">授 权</button>
+
+</view>

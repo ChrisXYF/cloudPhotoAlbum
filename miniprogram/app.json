@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/Login/Login",
+    "pages/index/index",
+    "pages/Home_page/Home_page",
+    "pages/Public_place/Public_place",
+    "pages/category/index"
+  ],
+  "tabBar": {
+    "list": [
+      {
+        "iconPath": "images/category.png",
+        "selectedIconPath": "images/category.png",
+        "pagePath": "pages/index/index",
+        "text": "相册"
+      },
+      {
+        "iconPath": "images/userCenter.png",
+        "selectedIconPath": "images/userCenter.png",
+        "pagePath": "pages/Home_page/Home_page",
+        "text": "个人中心"
+      }
+    ],
+    "color": "#bbb",
+    "selectedColor": "#000",
+    "backgroundColor": "#fff",
+    "borderStyle": "white"
+  },
+  "window": {
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "流脉云相册",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json"
+}
