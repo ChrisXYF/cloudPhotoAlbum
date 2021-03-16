@@ -1,0 +1,18 @@
+<view class="categoryMes" hidden="{{isHidden}}">
+  <view bindtap="changeImgUrl" class="inputContainer">
+    <text>上传相册图标</text>
+    <view class="imgBorder">
+      <image mode="aspectFill" style="width: 80%;height: 80%"
+        src="{{imgUrl}}">
+      </image>
+    </view>
+  </view>
+  <view class="inputContainer">
+    <label>相册名称</label>
+    <input type="text" class="inputItem" value="{{ctgName}}" bindblur="changeName" />
+  </view>
+  <view class="operation">
+    <button bindtap="addNewCategory">确认</button>
+    <button bindtap="cancelAdd">取消</button>
+  </view>
+</view>

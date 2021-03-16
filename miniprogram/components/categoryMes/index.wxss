@@ -1,0 +1,41 @@
+.categoryMes {
+  width: 70%;
+  height: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -150px;
+  background: rgb(152, 214, 243);
+  transform: translateX(-50%);
+  border: 1px solid;
+  border-radius: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 5px;
+}
+.inputContainer {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.imgBorder {
+  margin-top: 10px;
+  width: 50%;
+  height: 50px;
+  border: 1px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.inputItem {
+  margin-top: 10px;
+  border: 1px solid #fff;
+  border-radius: 15px
+}
+.operation {
+  width: 80%;
+  display: flex;
+  justify-content: space-around;
+}
