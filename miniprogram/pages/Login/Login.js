@@ -6,7 +6,8 @@ Page({
     userInfo: {},
     logged: false,
     takeSession: false,
-    requestResult: ''
+    requestResult: '',
+    done: false
   },
 
   onLoad: function () {
@@ -32,7 +33,8 @@ Page({
               console.error('[云函数] [login] 调用失败', err)
             }
           })
-          wx.getUserInfo({
+          wx.getUserProfile({
+            desc: '用于完善会员资料',
             success: res => {
               this.setData({
                 avatarUrl: res.userInfo.avatarUrl,
@@ -56,22 +58,23 @@ Page({
 
   onGetOpenid: function (e) {
 
-    wx.getUserInfo({
-
+    wx.getUserProfile({
+      desc: '用于完善会员资料',
       success: res => {
         this.setData({
           avatarUrl: res.userInfo.avatarUrl,
           userInfo: res.userInfo
         })
-
-
         wx.setStorage({
           key: "key",
           data: this.data.userInfo
         })
+        if(this.data.done) {
+          wx.switchTab({
+            url: '../Home_page/Home_page',
+          })
+        }
       }
-
-
     })
 
     // 调用云函数
@@ -83,9 +86,7 @@ Page({
         console.log('[云函数] [login] user openid: ', res.result.openid)
 
         app.globalData.openid = res.result.openid
-        wx.switchTab({
-          url: '../Home_page/Home_page',
-        })
+        this.setData({done: true})
       },
       fail: err => {
         console.error('[云函数] [login] 调用失败', err)

@@ -10,7 +10,7 @@
       <image mode="aspectFit" src="cloud://cloudalbum-0g7a32ke424ee80f.636c-cloudalbum-0g7a32ke424ee80f-1305212202/cloud_icons/添 加.png"></image>
       <text>添加相册</text>
     </view>
-    <view bindtap="goToCategory" wx:for="{{typeList}}" wx:key="index" data-type="{{typeList[index].name}}">
+    <view bindtap="goToCategory" data-ctgname="{{typeList[index].name}}" data-imgUrl="{{typeList[index].imgUrl}}" data-objIndex="{{index}}" data-objid="{{typeList[index]._id}}" bindlongpress="doDelete" wx:for="{{typeList}}" wx:key="index" data-type="{{typeList[index].name}}">
       <image mode="aspectFit" src="{{typeList[index].imgUrl}}"></image>
       <text>{{typeList[index].name}}</text>
     </view>

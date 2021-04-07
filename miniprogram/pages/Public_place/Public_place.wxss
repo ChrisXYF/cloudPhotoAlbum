@@ -77,7 +77,7 @@ page {
 
 .list
 {
-  width: 80%;
+  width: 90%;
   height: 70rpx;
   display: flex;
   flex-direction: row;
@@ -106,8 +106,10 @@ page {
   font-size:25rpx;
   display: flex;
   align-items: center;
+  justify-content: center;
   color:#26ACF5;
-  margin-left: 20rpx
+  margin-left: 20rpx;
+  text-align: center;
 }
 
 .add_button

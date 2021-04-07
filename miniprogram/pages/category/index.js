@@ -208,7 +208,6 @@ Page({
       content: '确定要删除该图片吗？',
       success: res => {
         if (res.confirm) {   
-
           wx.cloud.callFunction({
             name: 'delete_item',
             data: {

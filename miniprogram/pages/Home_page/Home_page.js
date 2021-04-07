@@ -2,7 +2,6 @@ const app = getApp()
 var util=require('../../utils/util.js');
 Page({
   data: {
-    avatarUrl: '',
     Username:'',
     Time: '',
     Head_picture:'',

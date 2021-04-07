@@ -3,6 +3,6 @@
 </view>
 
 <view class='con'>
-<button open-type="getUserInfo" class='ubutton' bindgetuserinfo="onGetOpenid">授 权</button>
+<button open-type="getUserInfo" class='ubutton' bindtap="onGetOpenid">授 权</button>
 
 </view>

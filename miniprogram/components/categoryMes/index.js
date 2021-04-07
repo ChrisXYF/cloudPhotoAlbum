@@ -14,7 +14,9 @@ Component({
   data: {
     imgUrl: '',
     ctgName: '',
-    isHidden: true
+    isHidden: true,
+    id: '',
+    type: 'addNew'
   }, // 私有数据，可用于模板渲染
 
   lifetimes: {
@@ -37,17 +39,29 @@ Component({
 
   methods: {
     addNewCategory: function () {
+      console.log(this.data)
       wx.cloud.callFunction({
-        name: 'add_category',
+        name: 'manage_category',
         data: {
           imgUrl: this.data.imgUrl,
-          name: this.data.ctgName
+          name: this.data.ctgName,
+          _id: this.data.id,
+          type: this.data.type
         }
       }).then(res => {
-        this.setData({
-          isHidden: true
-        })
-        this.triggerEvent('loadTypeList')
+        const result = res.result || {}
+        if (result.msg) {
+          wx.showToast({
+            title: '不能创建相同名称的相册！',
+            icon: 'success',
+            image: '../../images/error.png'
+          })
+        } else {
+          this.setData({
+            isHidden: true
+          })
+          this.triggerEvent('loadTypeList')
+        }
       })
     },
     _upload(tempFiles, i) {

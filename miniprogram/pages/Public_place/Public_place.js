@@ -1,5 +1,7 @@
 // miniprogram/pages/window/window.js
-const db = wx.cloud.database({ env: 'textllinpro-5br77' })
+const db = wx.cloud.database({
+  env: 'textllinpro-5br77'
+})
 const _ = db.command
 var allId = new Array()
 var allUpId = new Array()
@@ -18,8 +20,8 @@ Page({
   },
 
   /** 
-     * 预览图片
-     */
+   * 预览图片
+   */
   previewImage: function (e) {
     //var current = e.target.dataset.src;
     wx.previewImage({
@@ -38,8 +40,6 @@ Page({
     let that = this;
     wx.cloud.database().collection('Record_picture').get({
       success: function (res) {
-        console.log('获取数据成功', res)
-        console.log("image is", res.data)
         that.setData({
           shuzu: res.data
         })
@@ -52,7 +52,7 @@ Page({
 
   addclick: function () {
     wx.navigateTo({
-      url: '../Home_page/Home_page',
+      url: '../share/share',
     })
   },
   /**
@@ -114,7 +114,7 @@ Page({
       name: 'login',
       data: {},
       success: res => {
-        console.log(res)
+        console.log(666, res)
         that.setData({
           userid: res.result.openid
         })
@@ -135,7 +135,7 @@ Page({
             db.collection('Record_picture').get({
               success: res => {
                 that.setData({
-                  alldata: res.data //所有的用户列表数据
+                  shuzu: res.data //所有的用户列表数据
                 })
                 for (var i = 0; i < res.data.length; i++) {
                   allId[i] = res.data[i]._id //所有的用户列表_id
@@ -155,14 +155,9 @@ Page({
               }
             })
           },
-
         })
       }
     })
-
-
-
-
   },
 
   onLoad: function (options) {

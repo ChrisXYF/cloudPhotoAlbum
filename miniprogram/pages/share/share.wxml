@@ -1,0 +1,8 @@
+<view class='con'>
+<text class='mtext'>选择要分享的图片</text>
+</view>
+
+<view class='con'>
+<button class='ubutton' bindtap="toShare">发表</button>
+
+</view>

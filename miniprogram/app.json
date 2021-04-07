@@ -2,6 +2,7 @@
   "pages": [
     "pages/Login/Login",
     "pages/index/index",
+    "pages/share/share",
     "pages/Home_page/Home_page",
     "pages/Public_place/Public_place",
     "pages/category/index"

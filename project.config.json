@@ -40,8 +40,9 @@
   "onReachBottomDistance": 200,
   "appid": "wx1f2c426eb953eb0b",
   "projectname": "%E5%B0%8F%E5%B0%8F%E6%94%B6%E8%97%8F%E5%A4%B9",
-  "libVersion": "2.5.0",
+  "libVersion": "2.16.0",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {}
 }
