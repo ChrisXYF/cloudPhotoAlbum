@@ -40,8 +40,13 @@ Page({
     let that = this;
     wx.cloud.database().collection('Record_picture').get({
       success: function (res) {
+        let arr = []
+        res.data.forEach(item => {
+          arr.push(item.Vote)
+        })
         that.setData({
-          shuzu: res.data
+          shuzu: res.data,
+          array: arr
         })
       },
       fail(res) {
@@ -74,16 +79,16 @@ Page({
   upclickbutton: function (e) {
     var that = this
     var ind = e.currentTarget.dataset.nowindex
-    console.log(e.currentTarget.dataset.youid)
-    console.log(e.currentTarget.dataset.youopenid)
-
+    console.log(ind)
     if (this.data.array[ind] == 0) //说明没点赞过
     {
       var nowup = 'array[' + ind + ']' //设置为点赞过
       this.setData({
         [nowup]: 1
       })
-
+      console.log(this.data.userid)
+      console.log(e.currentTarget.dataset.youid)
+      console.log(e.currentTarget.dataset.youopenid)
 
       wx.cloud.callFunction({
         name: 'add_up_record',
@@ -120,6 +125,7 @@ Page({
         })
 
         var userid = that.data.userid;
+        this.getImageList()
         db.collection('My_up').where({ //获取自己的点赞列表
           myId: userid
         }).get({
@@ -135,7 +141,7 @@ Page({
             db.collection('Record_picture').get({
               success: res => {
                 that.setData({
-                  shuzu: res.data //所有的用户列表数据
+                  alldata: res.data //所有的用户列表数据
                 })
                 for (var i = 0; i < res.data.length; i++) {
                   allId[i] = res.data[i]._id //所有的用户列表_id
@@ -151,7 +157,6 @@ Page({
                     })
                   }
                 }
-                console.log(that.data.array)
               }
             })
           },
