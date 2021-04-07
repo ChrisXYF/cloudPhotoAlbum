@@ -13,7 +13,6 @@ Page({
     wx.getStorage({
       key: 'key',
       success(res) {
-        console.log(res);
         that.setData({
           Username: res.data.nickName,
           Time: util.formatTime(new Date()),

@@ -1,29 +1,29 @@
 const app = getApp()
-var util=require('../../utils/util.js');
+var util = require('../../utils/util.js');
 
 Page({
 
   data: {
-    Username:'',
+    Username: '',
     Time: '',
-    Head_picture:'',
-    Filepath:''
+    Head_picture: '',
+    Filepath: ''
   },
 
   onLoad: function (options) {
-    var that=this
-     wx.getStorage({
-       key: 'key',
-       success(res) {
-         that.setData({
-           Username: res.data.nickName,
-           Time: util.formatTime(new Date()),
-           Head_picture: res.data.avatarUrl
-         });
-         
-       }
-     }) 
-   },
+    var that = this
+    wx.getStorage({
+      key: 'key',
+      success(res) {
+        that.setData({
+          Username: res.data.nickName,
+          Time: util.formatTime(new Date()),
+          Head_picture: res.data.avatarUrl
+        });
+
+      }
+    })
+  },
   toShare: function () {
     var that = this
     // 选择图片
@@ -36,10 +36,9 @@ Page({
         that.setData({
             Filepath: res.tempFilePaths
           }),
-          console.log(that.data.Filepath);
-        wx.showLoading({
-          title: '上传中',
-        })
+          wx.showLoading({
+            title: '上传中',
+          })
 
         Promise.all(that.data.Filepath.map((value) => {
           return wx.cloud.uploadFile({

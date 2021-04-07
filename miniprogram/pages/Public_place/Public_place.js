@@ -65,7 +65,6 @@ Page({
    */
   removebutton: function (e) {
     var that = this
-    console.log("------------")
     wx.cloud.callFunction({
       name: 'remove_record_vote',
       data: {
@@ -79,17 +78,12 @@ Page({
   upclickbutton: function (e) {
     var that = this
     var ind = e.currentTarget.dataset.nowindex
-    console.log(ind)
     if (this.data.array[ind] == 0) //说明没点赞过
     {
       var nowup = 'array[' + ind + ']' //设置为点赞过
       this.setData({
         [nowup]: 1
       })
-      console.log(this.data.userid)
-      console.log(e.currentTarget.dataset.youid)
-      console.log(e.currentTarget.dataset.youopenid)
-
       wx.cloud.callFunction({
         name: 'add_up_record',
         data: {
@@ -114,53 +108,14 @@ Page({
 
   search_db: function () {
     var that = this
-    var index = 0
     wx.cloud.callFunction({
       name: 'login',
       data: {},
       success: res => {
-        console.log(666, res)
         that.setData({
           userid: res.result.openid
         })
-
-        var userid = that.data.userid;
         this.getImageList()
-        db.collection('My_up').where({ //获取自己的点赞列表
-          myId: userid
-        }).get({
-          success: res => {
-            console.log("res:---------", res)
-            that.setData({
-              allyouup: res.data //点赞列表data赋给allyouup
-            })
-            for (var i = 0; i < res.data.length; i++) {
-              allUpId[i] = res.data[i].youId //点赞列表赋给allUpId
-            }
-
-            db.collection('Record_picture').get({
-              success: res => {
-                that.setData({
-                  alldata: res.data //所有的用户列表数据
-                })
-                for (var i = 0; i < res.data.length; i++) {
-                  allId[i] = res.data[i]._id //所有的用户列表_id
-                  if (allUpId.indexOf(allId[i]) == -1) {
-                    var item = 'array[' + i + ']'
-                    that.setData({
-                      [item]: 0
-                    })
-                  } else {
-                    var item = 'array[' + i + ']'
-                    that.setData({
-                      [item]: 1
-                    })
-                  }
-                }
-              }
-            })
-          },
-        })
       }
     })
   },

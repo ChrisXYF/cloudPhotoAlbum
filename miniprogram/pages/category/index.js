@@ -244,11 +244,6 @@ Page({
     })
   },
 
-  onReachBottom(event){
-    // console.log(event)
-    // console.log(1)
-  },
-
   _showNum(){
     wx.cloud.callFunction({
       name: 'get_count_page',
