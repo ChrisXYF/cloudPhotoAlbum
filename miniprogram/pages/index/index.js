@@ -4,6 +4,9 @@ Page({
   data: {
     typeList: [],
     defaultList: [{
+        imgUrl: 'cloud://cloudalbum-0g7a32ke424ee80f.636c-cloudalbum-0g7a32ke424ee80f-1305212202/cloud_icons/收藏.png',
+        name: '我的收藏'
+      },{
         imgUrl: 'cloud://cloudalbum-0g7a32ke424ee80f.636c-cloudalbum-0g7a32ke424ee80f-1305212202/cloud_icons/家庭关系.png',
         name: '家庭相册'
       },

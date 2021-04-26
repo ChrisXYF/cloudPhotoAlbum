@@ -9,12 +9,20 @@ const db = cloud.database()
 
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
+  if(event.operation == 'addLike') {
+    await db.collection('photos').doc(event.id).update({
+      data: {
+        isLike: event.isLike
+      }
+    })
+  }
   return db.collection('photos').add({
     data:{
       due: new Date(),
       _openid: wxContext.OPENID,
       type: event.type || '其他',
-      fileID: event.fileID
+      fileID: event.fileID,
+      isLike: event.isLike
     }
   })
 }

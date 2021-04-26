@@ -41,6 +41,7 @@ Page({
     wx.cloud.database().collection('Record_picture').get({
       success: function (res) {
         let arr = []
+        console.log(res)
         res.data.forEach(item => {
           arr.push(item.Vote)
         })

@@ -1,4 +1,3 @@
-
 let guid = require('../utils/guid.js')
 let appInstance = getApp()
 
@@ -6,7 +5,11 @@ Page({
   data: {
     width: wx.getSystemInfoSync().windowWidth,
     height: wx.getSystemInfoSync().windowHeight,
-    current_page: 1
+    current_page: 1,
+    modeArray: ['普通模式', '时光相册', '日记模式'],
+    modeValue: '普通模式',
+    timeItems: [],
+    items: []
   },
 
   onLoad: function (options) {
@@ -33,9 +36,21 @@ Page({
   //     return wx.setStorageSync('img_time', new Date())
   //   }
   // },
+  modeChange(e) {
+    let newData = this.data.timeItems.map((item) => {
+      item.due = item.due.split('T')[0];
+      return item
+    })
+    this.setData({
+      modeValue: this.data.modeArray[e.detail.value],
+      timeItems: newData
+    })
+  },
 
-  _get18(page){
-    wx.showLoading({title: '加载中...'})
+  _get18(page) {
+    wx.showLoading({
+      title: '加载中...'
+    })
     wx.cloud.callFunction({
       name: 'get_list',
       data: {
@@ -43,7 +58,7 @@ Page({
         page: page
       }
     }).then(res => {
-      if (res.errMsg == 'cloud.callFunction:ok'){
+      if (res.errMsg == 'cloud.callFunction:ok') {
         this._setList(res.result.data)
       }
     })
@@ -51,76 +66,91 @@ Page({
   },
 
   //拉取图片
-  _setList(data){
+  _setList(data) {
     let imgs = []
     let tempdata = []
     let preview_imgs = []
-    
-    for (let i in data){
+
+    for (let i in data) {
       imgs.push(data[i].fileID)
       //判断缓存中是否命中
-      if (appInstance.globalData[imgs[i]] && appInstance.globalData[imgs[i]].tempFileURL){
+      if (appInstance.globalData[imgs[i]] && appInstance.globalData[imgs[i]].tempFileURL) {
         tempdata.push(appInstance.globalData[imgs[i]])
         preview_imgs.push(appInstance.globalData[imgs[i]].tempFileURL)
       }
     }
     //存在缓存，从缓存中取
-    if(imgs.length == tempdata.length){
+    if (imgs.length == tempdata.length) {
+      let timeData = JSON.parse(JSON.stringify(tempdata))
+      timeData.sort((l, r) => {
+        let lDue = new Date(l.due).getTime()
+        let rDue = new Date(r.due).getTime()
+        return lDue - rDue
+      })
+
       this.setData({
         items: tempdata,
-        preview_imgs: preview_imgs
+        preview_imgs: preview_imgs,
+        timeItems: timeData
       })
       wx.hideLoading()
       return
     }
-  
+
     wx.cloud.getTempFileURL({
       fileList: imgs,
       success: res => {
-        for (let temp in res.fileList){    
+        for (let temp in res.fileList) {
           let t_url = res.fileList[temp].tempFileURL
           data[temp].tempFileURL = t_url
           preview_imgs.push(t_url)
           //将临时文件路径写进缓存
           appInstance.globalData[imgs[temp]] = data[temp]
         }
+        let timeData = JSON.parse(JSON.stringify(data))
+        timeData.sort((l, r) => {
+          let lDue = new Date(l.due).getTime()
+          let rDue = new Date(r.due).getTime()
+          return lDue - rDue
+        })
         this.setData({
           items: data,
-          preview_imgs: preview_imgs
+          preview_imgs: preview_imgs,
+          timeItems: timeData
         })
       },
       fail: err => {
-       
+
       },
-      complete(){
+      complete() {
         wx.hideLoading()
       }
     })
 
   },
 
-  doUpload(){
+  doUpload() {
     wx.chooseImage({
       count: 5,
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
-      success: res=> {
+      success: res => {
         this._upload(res.tempFilePaths, 0)
       },
-      fail: e=>{
+      fail: e => {
         //错误信息提示
       }
     })
   },
 
-  _upload(tempFiles, i){
+  _upload(tempFiles, i) {
     const filePath = tempFiles[i]
     const cloudPath = 'pics/' + guid.guid() + filePath.match(/\.[^.]+?$/)[0]
     let tempFileID = '';
     wx.cloud.uploadFile({
       cloudPath,
       filePath,
-      success:res=>{
+      success: res => {
         tempFileID = res.fileID
         //提前显示图片
         let pics = this.data.items
@@ -130,44 +160,67 @@ Page({
           fileID: tempFileID
         })
         preview_imgs.unshift(filePath)
+        let timeData = JSON.parse(JSON.stringify(pics))
+        timeData.sort((l, r) => {
+          let lDue = new Date(l.due).getTime()
+          let rDue = new Date(r.due).getTime()
+          return lDue - rDue
+        })
 
         this.setData({
           items: pics,
-          preview_imgs: preview_imgs
+          preview_imgs: preview_imgs,
+          timeItems: timeData
         })
-        
+
         wx.cloud.callFunction({
           name: 'add_item',
           data: {
             fileID: res.fileID,
-            type: this.data.type
+            type: this.data.type,
+            isLike: false,
+            operation: 'addNew'
           }
-        }).then(res=>{
+        }).then(res => {
           pics[0]._id = res.result._id
+          let timeData = JSON.parse(JSON.stringify(pics))
+          timeData.sort((l, r) => {
+            let lDue = new Date(l.due).getTime()
+            let rDue = new Date(r.due).getTime()
+            return lDue - rDue
+          })
           this.setData({
-            items: pics
+            items: pics,
+            timeItems: timeData
           })
           wx.showToast({
             title: '第 ' + (parseInt(i) + 1) + ' 张图片上传成功',
-            icon:'none'
+            icon: 'none'
           })
           //将界面显示的数据变更
           this.setData({
             count: this.data.count + 1
           })
           //继续上传选中的下一张图片
-          if(i + 1 < tempFiles.length){
+          if (i + 1 < tempFiles.length) {
             i = i + 1
             this._upload(tempFiles, i)
           }
-        }).fail(e=>{
+        }).fail(e => {
           //失败处理
           //从已经显示的图片里剔除第一个
           pics.shift()
           preview_imgs.shift()
+          let timeData = JSON.parse(JSON.stringify(pics))
+          timeData.sort((l, r) => {
+            let lDue = new Date(l.due).getTime()
+            let rDue = new Date(r.due).getTime()
+            return lDue - rDue
+          })
           this.setData({
             items: pics,
-            preview_imgs: preview_imgs
+            preview_imgs: preview_imgs,
+            timeItems: timeData
           })
           wx.showToast({
             title: '第 ' + (parseInt(i) + 1) + ' 张图片上传失败',
@@ -175,13 +228,13 @@ Page({
           })
         })
       },
-      fail: e=>{
+      fail: e => {
         wx.showToast({
           title: '第 ' + (parseInt(i) + 1) + ' 张图片上传失败',
           icon: 'none'
         })
       },
-      complete: ()=>{
+      complete: () => {
         // wx.showToast({
         //   title: '上传完成',
         // })
@@ -189,68 +242,116 @@ Page({
     })
   },
 
-  doPreview(event){
+  doPreview(event) {
     let url = event.currentTarget.dataset.objurl
     wx.previewImage({
-      current: url, 
+      current: url,
       urls: this.data.preview_imgs
     })
   },
 
-  doDelete(e){
+  doDelete(e) {
+    const _this = this
     let _id = e.currentTarget.dataset.objid
     let url = e.currentTarget.dataset.objurl
     let fileID = e.currentTarget.dataset.fileid
-    let items = this.data.items
-    let imgs = this.data.preview_imgs
-    wx.showModal({
-      title: '提醒',
-      content: '确定要删除该图片吗？',
-      success: res => {
-        if (res.confirm) {   
-          wx.cloud.callFunction({
-            name: 'delete_item',
-            data: {
-              fileID: fileID,
-              _id: _id
-            }
-          }).then(res=>{
-            if(res.errMsg.indexOf('fail') < 0){
-              for (let i in items) {
-                if (items[i]._id == _id) {
-                  items.splice(i, 1)
-                }
+    let isLike = e.currentTarget.dataset.islike
+    let items = [...this.data.items]
+    let type = this.data.type
+    let imgs = [...this.data.preview_imgs]
+    let option = type == '我的收藏' ? ['', '取消收藏'] : isLike ? ['已收藏', '删除'] : ['收藏', '删除']
+    wx.showActionSheet({
+      itemList: option,
+      success(res) {
+        if (res.tapIndex == 0) {
+          if (!isLike) {
+            wx.cloud.callFunction({
+              name: 'add_item',
+              data: {
+                operation: 'addLike',
+                id: _id,
+                fileID: fileID,
+                type: '我的收藏',
+                isLike: !isLike
               }
-              for (let i in imgs) {
-                if (imgs[i] == url) {
-                  imgs.splice(i, 1)
+            }).then(res => {
+              if (res.errMsg.indexOf('fail') < 0) {
+                for (let i in items) {
+                  if (items[i]._id == _id) {
+                    items[i].isLike = true
+                  }
                 }
+                let timeData = JSON.parse(JSON.stringify(items))
+                timeData.sort((l, r) => {
+                  let lDue = new Date(l.due).getTime()
+                  let rDue = new Date(r.due).getTime()
+                  return lDue - rDue
+                })
+                _this.setData({
+                  items: items,
+                  timeItems: timeData
+                })
               }
-              this.setData({
-                items: items,
-                preview_imgs: imgs,
-                count: this.data.count - 1
-              })
-            }else{
-              wx.showToast({
-                title: '服务异常，删除失败，请稍后再试',
-                icon: 'none'
-              })
+            })
+          }
+        } else {
+          wx.showModal({
+            title: '提醒',
+            content: type == '我的收藏' ? '确定移除该图片吗？' : '确定要删除该图片吗？',
+            success: res => {
+              if (res.confirm) {
+                wx.cloud.callFunction({
+                  name: 'delete_item',
+                  data: {
+                    fileID: fileID,
+                    _id: _id
+                  }
+                }).then(res => {
+                  if (res.errMsg.indexOf('fail') < 0) {
+                    for (let i in items) {
+                      if (items[i]._id == _id) {
+                        items.splice(i, 1)
+                      }
+                    }
+                    for (let i in imgs) {
+                      if (imgs[i] == url) {
+                        imgs.splice(i, 1)
+                      }
+                    }
+                    let timeData = JSON.parse(JSON.stringify(items))
+                    timeData.sort((l, r) => {
+                      let lDue = new Date(l.due).getTime()
+                      let rDue = new Date(r.due).getTime()
+                      return lDue - rDue
+                    })
+                    _this.setData({
+                      items: items,
+                      preview_imgs: imgs,
+                      count: _this.data.count - 1,
+                      timeItems: timeData
+                    })
+                  } else {
+                    wx.showToast({
+                      title: '服务异常，删除失败，请稍后再试',
+                      icon: 'none'
+                    })
+                  }
+                })
+              }
             }
-            
           })
         }
       }
     })
   },
 
-  _showNum(){
+  _showNum() {
     wx.cloud.callFunction({
       name: 'get_count_page',
       data: {
         type: this.data.type
       }
-    }).then(res=>{
+    }).then(res => {
       this.setData({
         count: res.result.count,
         pagesize: res.result.pagesize,
@@ -260,7 +361,7 @@ Page({
   },
 
   //上一页
-  doPrePage(){
+  doPrePage() {
     let current_page = this.data.current_page
     let total_page = this.data.total_page
     if (1 < current_page) {
@@ -272,10 +373,10 @@ Page({
   },
 
   //下一页
-  doNextPage(){
+  doNextPage() {
     let current_page = this.data.current_page
     let total_page = this.data.total_page
-    if(current_page < total_page){
+    if (current_page < total_page) {
       this.setData({
         current_page: current_page + 1
       })
