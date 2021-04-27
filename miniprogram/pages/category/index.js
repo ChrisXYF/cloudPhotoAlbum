@@ -5,20 +5,26 @@ Page({
   data: {
     width: wx.getSystemInfoSync().windowWidth,
     height: wx.getSystemInfoSync().windowHeight,
+    dailyHeight:wx.getSystemInfoSync().windowHeight-120,
     current_page: 1,
     modeArray: ['普通模式', '时光相册', '日记模式'],
     modeValue: '普通模式',
     timeItems: [],
-    items: []
+    items: [],
+    shuzu: []
   },
 
   onLoad: function (options) {
+    this.getImageList()
     let type = options.type || '其他'
     this.setData({
       type: type
     })
     this._get18(1)
     this._showNum()
+  },
+  onShow: function() {
+    this.getImageList()
   },
 
 
@@ -36,6 +42,31 @@ Page({
   //     return wx.setStorageSync('img_time', new Date())
   //   }
   // },
+  //获取图片
+  getImageList() {
+    let that = this;
+    wx.cloud.database().collection('daily').get({
+      success: function (res) {
+        let arr = []
+        console.log(res)
+        res.data.forEach(item => {
+          arr.push(item.Vote)
+        })
+        that.setData({
+          shuzu: res.data,
+          array: arr
+        })
+      },
+      fail(res) {
+        console.log('获取失败', imgurl)
+      }
+    })
+  },
+  dailyUpload() {
+    wx.navigateTo({
+      url: '../share/share?mode=daily',
+    })
+  },
   modeChange(e) {
     let newData = this.data.timeItems.map((item) => {
       item.due = item.due.split('T')[0];

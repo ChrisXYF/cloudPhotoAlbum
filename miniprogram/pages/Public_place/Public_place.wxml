@@ -21,10 +21,13 @@
   </view>
 
 
-  <view class='main'>
+  <view>
     <!--><view wx:for="{{dataList}}" wx:key="item" class="img_list"><-->
-    <image wx:for="{{shuzu[index].Picture_map}}" wx:key='_id' wx:for-item="url" src='{{url}}' bindtap="previewImage"
-      data-myimg='{{url}}'></image>
+    <view class="content">{{shuzu[index].mes}}</view>
+    <view class='main'>
+      <image wx:for="{{shuzu[index].Picture_map}}" wx:key='_id' wx:for-item="url" src='{{url}}' bindtap="previewImage"
+        data-myimg='{{url}}'></image>
+    </view>
   </view>
 
 
@@ -61,9 +64,9 @@
         </view>
       </block>
       <view class='button_three'>
-          <button open-type="share">
-            <view style='margin-left: 0' class='bottom_text'>分享</view>
-          </button>
+        <button open-type="share">
+          <view style='margin-left: 0' class='bottom_text'>分享</view>
+        </button>
       </view>
     </view>
   </view>

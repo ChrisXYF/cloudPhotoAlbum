@@ -58,7 +58,7 @@ Page({
 
   addclick: function () {
     wx.navigateTo({
-      url: '../share/share',
+      url: '../share/share?mode=add',
     })
   },
   /**

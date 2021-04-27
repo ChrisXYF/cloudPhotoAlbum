@@ -99,3 +99,7 @@ page{
   justify-content: space-evenly;
   align-items: center;
 }
+.dailyItem {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}

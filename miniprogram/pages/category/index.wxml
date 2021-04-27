@@ -8,8 +8,12 @@
 </view>
 <scroll-view scroll-y="true" enable-back-to-top="true" style="height:{{height}}px" hidden="{{modeValue != '普通模式'}}">
   <view class="container">
-    <view wx:if="{{items.length}}" bindtap="doPreview" bindlongpress="doDelete" style="width:{{width/3}}px;height:{{width/3}}px" wx:for="{{items}}" wx:key="index" data-isLike="{{items[index].isLike}}" data-objid="{{items[index]._id}}" data-objurl="{{items[index].tempFileURL}}" data-fileid="{{items[index].fileID}}">
-      <image mode="aspectFill" style="width:{{width/3}}px;height:{{width/3}}px" src="{{items[index].tempFileURL}}"></image>
+    <view wx:if="{{items.length}}" bindtap="doPreview" bindlongpress="doDelete"
+      style="width:{{width/3}}px;height:{{width/3}}px" wx:for="{{items}}" wx:key="index"
+      data-isLike="{{items[index].isLike}}" data-objid="{{items[index]._id}}" data-objurl="{{items[index].tempFileURL}}"
+      data-fileid="{{items[index].fileID}}">
+      <image mode="aspectFill" style="width:{{width/3}}px;height:{{width/3}}px" src="{{items[index].tempFileURL}}">
+      </image>
     </view>
     <view wx:if="{{items.length == 0}}" class="show-tip">你还没有上传任何图片，赶紧上传吧</view>
     <view class="action" wx:if="{{count > 0}}">
@@ -22,14 +26,32 @@
   </view>
 </scroll-view>
 <view class="timeMode" hidden="{{modeValue != '时光相册'}}">
-  <swiper class="timeSwiper" >
-      <swiper-item class="timeItem"  wx:if="{{timeItems.length}}" wx:for="{{timeItems}}" wx:key="index">
+  <swiper class="timeSwiper">
+    <swiper-item class="timeItem" wx:if="{{timeItems.length}}" wx:for="{{timeItems}}" wx:key="index">
       <image mode="aspectFit" src="{{timeItems[index].tempFileURL}}"></image>
       <text>{{ timeItems[index].due }}</text>
     </swiper-item>
   </swiper>
 </view>
 
+<view hidden="{{modeValue != '日记模式'}}" class="timeMode">
+  <scroll-view scroll-y="true" enable-back-to-top="true"  style="height:{{dailyHeight}}px">
+    <view wx:for="{{shuzu}}" wx:key="_id" wx:index="index" class="dailyItem">
+      <view class='time'>
+        {{shuzu[index].Time}}
+      </view>
+      <view class="content">{{shuzu[index].mes}}</view>
+      <view class='main'>
+        <image wx:for="{{shuzu[index].Picture_map}}" wx:key='_id' wx:for-item="url" src='{{url}}' bindtap="previewImage"
+          data-myimg='{{url}}'></image>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
 <view class="upload" bindtap="doUpload">
   <text>上传图片</text>
+</view>
+<view class="upload" bindtap="dailyUpload" hidden="{{modeValue != '日记模式'}}">
+  <text>写日记</text>
 </view>

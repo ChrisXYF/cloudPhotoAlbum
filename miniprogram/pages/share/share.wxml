@@ -1,8 +1,13 @@
+<view class="con">
+  <text class="mtext">添加描述</text>
+  <textarea bindblur="bindTextAreaBlur" class="diretext" auto-height placeholder="今天..." />
+  </view>
+
 <view class='con'>
 <text class='mtext'>选择要分享的图片</text>
 </view>
 
 <view class='con'>
-<button class='ubutton' bindtap="toShare">发表</button>
-
+<button class='ubutton' bindtap="toShare" hidden="{{mode != 'add'}}">选择图片发表</button>
+<button class='ubutton' bindtap="toWrite" hidden="{{mode != 'daily'}}">选择图片发表</button>
 </view>

@@ -64,6 +64,10 @@ page {
  font-size: 24rpx;
 }
 
+.content {
+  padding: 20rpx 10rpx;
+}
+
 .main
 {
   width: 690rpx;
@@ -134,7 +138,7 @@ page {
 .main image{
   height: 220rpx;
   width: 220rpx;
-  margin: 0 5rpx;
+  margin: 20rpx 5rpx;
   border-radius: 20rpx;
 }
 

@@ -1,6 +1,9 @@
 .con{
   display:flex;                   
   justify-content: center;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .timage{
@@ -15,9 +18,16 @@
   width: 650rpx;
   height: 35rpx;
   font-size: 36rpx;
-  margin-top: 200rpx;
+  margin-top: 50rpx;
   margin-bottom: 0rpx;
   text-align: center;
+}
+.diretext {
+  width: 650rpx;
+  min-height: 305rpx;
+  font-size: 36rpx;
+  margin-top: 20rpx;
+  border: 1px solid #ccc;
 }
 
 
