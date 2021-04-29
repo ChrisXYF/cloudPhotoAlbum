@@ -26,7 +26,7 @@
   </view>
 </scroll-view>
 <view class="timeMode" hidden="{{modeValue != '时光相册'}}">
-  <swiper class="timeSwiper">
+  <swiper class="timeSwiper" autoplay="true" interval="2500">
     <swiper-item class="timeItem" wx:if="{{timeItems.length}}" wx:for="{{timeItems}}" wx:key="index">
       <image mode="aspectFit" src="{{timeItems[index].tempFileURL}}"></image>
       <text>{{ timeItems[index].due }}</text>
@@ -35,7 +35,7 @@
 </view>
 
 <view hidden="{{modeValue != '日记模式'}}" class="timeMode">
-  <scroll-view scroll-y="true" enable-back-to-top="true"  style="height:{{dailyHeight}}px">
+  <scroll-view scroll-y="true" enable-back-to-top="true"  style="height:{{dailyHeight}}px" >
     <view wx:for="{{shuzu}}" wx:key="_id" wx:index="index" class="dailyItem">
       <view class='time'>
         {{shuzu[index].Time}}
