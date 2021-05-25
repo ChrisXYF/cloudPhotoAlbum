@@ -15,13 +15,14 @@ Page({
   },
 
   onLoad: function (options) {
-    this.getImageList()
     let type = options.type || '其他'
+    
     this.setData({
       type: type
     })
     this._get18(1)
     this._showNum()
+    this.getImageList()
   },
   onShow: function() {
     this.getImageList()
@@ -48,12 +49,12 @@ Page({
     wx.cloud.database().collection('daily').get({
       success: function (res) {
         let arr = []
-        console.log(res)
         res.data.forEach(item => {
           arr.push(item.Vote)
         })
+        let result = [...res.data]
         that.setData({
-          shuzu: res.data,
+          shuzu: result,
           array: arr
         })
       },
@@ -89,8 +90,14 @@ Page({
         page: page
       }
     }).then(res => {
+      console.log(res)
       if (res.errMsg == 'cloud.callFunction:ok') {
         this._setList(res.result.data)
+        // this.setData({
+        //   items: res.result.data,
+        //   timeItems: res.result.data,
+        //   preview_imgs: res.result.data
+        // })
       }
     })
 
@@ -110,23 +117,23 @@ Page({
         preview_imgs.push(appInstance.globalData[imgs[i]].tempFileURL)
       }
     }
-    //存在缓存，从缓存中取
-    if (imgs.length == tempdata.length) {
-      let timeData = JSON.parse(JSON.stringify(tempdata))
-      timeData.sort((l, r) => {
-        let lDue = new Date(l.due).getTime()
-        let rDue = new Date(r.due).getTime()
-        return lDue - rDue
-      })
+    // //存在缓存，从缓存中取
+    // if (imgs.length == tempdata.length) {
+    //   let timeData = JSON.parse(JSON.stringify(tempdata))
+    //   timeData.sort((l, r) => {
+    //     let lDue = new Date(l.due).getTime()
+    //     let rDue = new Date(r.due).getTime()
+    //     return lDue - rDue
+    //   })
 
-      this.setData({
-        items: tempdata,
-        preview_imgs: preview_imgs,
-        timeItems: timeData
-      })
-      wx.hideLoading()
-      return
-    }
+    //   this.setData({
+    //     items: tempdata,
+    //     preview_imgs: preview_imgs,
+    //     timeItems: timeData
+    //   })
+    //   wx.hideLoading()
+    //   return
+    // }
 
     wx.cloud.getTempFileURL({
       fileList: imgs,
@@ -288,6 +295,8 @@ Page({
     let fileID = e.currentTarget.dataset.fileid
     let isLike = e.currentTarget.dataset.islike
     let items = [...this.data.items]
+    console.log(items)
+    console.log(e.currentTarget.dataset)
     let type = this.data.type
     let imgs = [...this.data.preview_imgs]
     let option = type == '我的收藏' ? ['', '取消收藏'] : isLike ? ['已收藏', '删除'] : ['收藏', '删除']
@@ -326,6 +335,7 @@ Page({
             })
           }
         } else {
+          console.log(_id)
           wx.showModal({
             title: '提醒',
             content: type == '我的收藏' ? '确定移除该图片吗？' : '确定要删除该图片吗？',
@@ -334,10 +344,12 @@ Page({
                 wx.cloud.callFunction({
                   name: 'delete_item',
                   data: {
+                    type:  type == '我的收藏' ? 'unLike' : 'delete',
                     fileID: fileID,
                     _id: _id
                   }
                 }).then(res => {
+                  console.log(res)
                   if (res.errMsg.indexOf('fail') < 0) {
                     for (let i in items) {
                       if (items[i]._id == _id) {

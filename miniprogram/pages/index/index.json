@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "CategoryMes": "../../components/categoryMes/index"
+    "CategoryMes": "../../components/categoryMes"
   }
 }

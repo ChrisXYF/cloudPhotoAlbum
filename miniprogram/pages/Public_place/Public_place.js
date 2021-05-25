@@ -45,6 +45,7 @@ Page({
         res.data.forEach(item => {
           arr.push(item.Vote)
         })
+        console.log(res.data)
         that.setData({
           shuzu: res.data,
           array: arr
@@ -114,7 +115,7 @@ Page({
       data: {},
       success: res => {
         that.setData({
-          userid: res.result.openid
+          userid: res.result.openId
         })
         this.getImageList()
       }

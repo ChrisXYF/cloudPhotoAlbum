@@ -7,7 +7,6 @@ cloud.init({
 
 const db = cloud.database()
 
-//分页，每页取48条记录
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const typeList = await db.collection('category').where({

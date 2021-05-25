@@ -40,6 +40,7 @@ Page({
       name: 'get_category',
     }).then(res => {
       if (res.errMsg == 'cloud.callFunction:ok') {
+        console.log(res)
         this.setData({
           typeList: [...res.result.typeList.data]
         })
