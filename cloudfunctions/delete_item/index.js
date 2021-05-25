@@ -16,5 +16,13 @@ exports.main = async (event, context) => {
       fileList: [event.fileID],
     })
   } else {
+    return await db.collection('photos').where({
+      _openid: wxContext.OPENID,
+      fileID: event.fileID
+    }).update({
+      data: {
+        isLike: false
+      }
+    })
   }
 }

@@ -16,9 +16,10 @@ Page({
 
   onLoad: function (options) {
     let type = options.type || '其他'
-    
+    let modeArray = type == '我的收藏' ? ['普通模式','时光相册'] : ['普通模式', '时光相册', '日记模式']
     this.setData({
-      type: type
+      type: type,
+      modeArray
     })
     this._get18(1)
     this._showNum()
@@ -299,7 +300,7 @@ Page({
     console.log(e.currentTarget.dataset)
     let type = this.data.type
     let imgs = [...this.data.preview_imgs]
-    let option = type == '我的收藏' ? ['', '取消收藏'] : isLike ? ['已收藏', '删除'] : ['收藏', '删除']
+    let option = type == '我的收藏' ? ['', '取消收藏','保存图片'] : isLike ? ['已收藏', '删除','保存图片'] : ['收藏', '删除','保存图片']
     wx.showActionSheet({
       itemList: option,
       success(res) {
@@ -334,7 +335,7 @@ Page({
               }
             })
           }
-        } else {
+        } else if(res.tapIndex == 1){
           console.log(_id)
           wx.showModal({
             title: '提醒',
@@ -383,6 +384,37 @@ Page({
               }
             }
           })
+        }else {
+          wx.cloud.downloadFile({
+            fileID: fileID,//这个地方的fileID就是云存储文件的fileID
+            success: function (res) {　　
+              console.log("下载图片成功",res.tempFilePath)　　　　　　　　　　//成功后的回调函数
+              wx.saveImageToPhotosAlbum({　　　　　　　　　//保存到本地
+                filePath: res.tempFilePath,
+                success(res) {
+                  wx.showToast({
+                    title: '保存成功',
+                    icon: 'success',
+                    duration: 2000
+                  })
+                },
+                fail: function (err) {
+                  if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+                    wx.openSetting({
+                      success(settingdata) {
+                        console.log(settingdata)
+                        if (settingdata.authSetting['scope.writePhotosAlbum']) {
+                          console.log('获取权限成功，给出再次点击图片保存到相册的提示。')
+                        } else {
+                          console.log('获取权限失败，给出不给权限就无法正常使用的提示')
+                        }
+                      }
+                    })
+                  }
+                }
+              })
+            }
+          })  
         }
       }
     })

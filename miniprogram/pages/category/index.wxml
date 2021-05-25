@@ -49,7 +49,7 @@
   </scroll-view>
 </view>
 
-<view class="upload" bindtap="doUpload">
+<view class="upload" bindtap="doUpload" hidden="{{type == '我的收藏'}}">
   <text>上传图片</text>
 </view>
 <view class="upload" bindtap="dailyUpload" hidden="{{modeValue != '日记模式'}}">
